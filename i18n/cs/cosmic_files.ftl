@@ -126,6 +126,7 @@ zoom-out = Oddálit
 view = Zobrazení
 grid-view = Zobrazit jako mřížku
 list-view = Zobrazit jako seznam
+column-view = Column view
 show-hidden-files = Zobrazit skryté soubory
 list-directories-first = Řadit nejprve složky
 menu-settings = Nastavení...

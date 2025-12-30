@@ -291,6 +291,7 @@ reload-folder = Last inn mappe på nytt
 rename = Gi nytt navn…
 grid-view = Rutevisning
 list-view = Rutenettvisning
+column-view = Column view
 show-hidden-files = Vis skjulte filer
 list-directories-first = List mapper først
 gallery-preview = Galleriforhåndsvisning

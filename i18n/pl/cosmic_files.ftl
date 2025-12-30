@@ -406,6 +406,7 @@ zoom-out = Oddal
 view = Widok
 grid-view = Widok siatki
 list-view = Widok listy
+column-view = Column view
 show-hidden-files = Pokaż ukryte pliki
 list-directories-first = Najpierw wyświetlaj katalogi
 gallery-preview = Podgąd galerii

@@ -279,6 +279,7 @@ zoom-out = Zoomaa ulos
 view = Näkymä
 grid-view = Ruudukkonäkymä
 list-view = Listanäkymä
+column-view = Column view
 show-hidden-files = Näytä piilotetut tiedostot
 list-directories-first = Näytä kansiot ensin
 gallery-preview = Gallerian esinäkymä

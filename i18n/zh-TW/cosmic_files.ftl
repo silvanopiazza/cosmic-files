@@ -237,6 +237,7 @@ zoom-out = 縮小
 view = 檢視
 grid-view = 網格檢視
 list-view = 列表檢視
+column-view = Column view
 show-hidden-files = 顯示隱藏檔案
 list-directories-first = 優先列出目錄
 menu-settings = 設定...

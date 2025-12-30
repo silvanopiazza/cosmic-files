@@ -392,6 +392,7 @@ zoom-out = Disminuir
 view = Vista
 grid-view = Vista de cuadrícula
 list-view = Vista de lista
+column-view = Column view
 show-hidden-files = Mostrar archivos ocultos
 list-directories-first = Enumerar los directorios primero
 gallery-preview = Vista previa de la galería

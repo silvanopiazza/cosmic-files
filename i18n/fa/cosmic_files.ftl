@@ -330,6 +330,7 @@ zoom-out = کوچک‌نمایی
 view = نمایش
 grid-view = نمایش شبکه‌ای
 list-view = نمایش فهرستی
+column-view = Column view
 show-hidden-files = نمایش فایل‌های مخفی
 list-directories-first = نمایش پوشه‌ها در ابتدا
 gallery-preview = پیش‌نمایش گالری

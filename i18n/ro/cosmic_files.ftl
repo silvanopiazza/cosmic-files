@@ -360,6 +360,7 @@ zoom-out = Micșorează
 view = Vizualizare
 grid-view = Vizualizare grilă
 list-view = Vizualizare listă
+column-view = Column view
 show-hidden-files = Afișează fișiere ascunse
 list-directories-first = Listează directoarele primele
 gallery-preview = Previzualizare galerie

@@ -101,5 +101,6 @@ select-all = 모두 선택
 view = 보기
 grid-view = 그리드 보기
 list-view = 목록 보기
+column-view = Column view
 menu-settings = 설정...
 menu-about = 코스믹 파일에 대하여...

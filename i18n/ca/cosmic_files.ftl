@@ -337,6 +337,7 @@ zoom-out = Redueix
 view = Visualització
 grid-view = Vista de graella
 list-view = Vista de llista
+column-view = Column view
 show-hidden-files = Mostra els fitxers ocults
 list-directories-first = Mostra els directoris primer
 gallery-preview = Vista prèvia en galeria

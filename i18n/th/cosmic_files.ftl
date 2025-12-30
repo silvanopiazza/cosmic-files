@@ -291,6 +291,7 @@ zoom-out = ซูมออก
 view = มุมมอง
 grid-view = มุมมองแบบตาราง
 list-view = มุมมองแบบรายการ
+column-view = Column view
 show-hidden-files = แสดงไฟล์ที่ซ่อนอยู่
 list-directories-first = แสดงแฟ้มก่อนเสมอ
 gallery-preview = ตัวอย่างแบบแกลเลอรี่

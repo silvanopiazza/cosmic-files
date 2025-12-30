@@ -385,6 +385,7 @@ zoom-out = Dézoomer
 view = Affichage
 grid-view = Vue en grille
 list-view = Vue en liste
+column-view = Column view
 show-hidden-files = Afficher les fichiers cachés
 list-directories-first = Lister les répertoires en premier
 gallery-preview = Aperçu de la galerie

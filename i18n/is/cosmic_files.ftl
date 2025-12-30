@@ -246,6 +246,7 @@ zoom-out = Minnka aðdrátt
 view = Skoða
 grid-view = Reitayfirlit
 list-view = Listayfirlit
+column-view = Column view
 show-hidden-files = Sýna faldar skrár
 list-directories-first = Hafa möppur fremst
 gallery-preview = Forskoðun myndasafns

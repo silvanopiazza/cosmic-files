@@ -390,6 +390,7 @@ zoom-out = Zoom uit
 view = Aanzicht
 grid-view = Rasterweergave
 list-view = Lijstweergave
+column-view = Column view
 show-hidden-files = Verborgen bestanden tonen
 list-directories-first = Mappen bovenaan weergeven
 gallery-preview = Galerijweergave

@@ -399,6 +399,7 @@ zoom-out = Паменшыць
 view = Выгляд
 grid-view = Рэжым сеткі
 list-view = Рэжым спіса
+column-view = Column view
 show-hidden-files = Паказваць схаваныя файлы
 list-directories-first = Размяшчаць папкі перад файламі
 gallery-preview = Папярэдні прагляд

@@ -402,6 +402,7 @@ zoom-out = Kicsinyítés
 view = Nézet
 grid-view = Rácsnézet
 list-view = Listanézet
+column-view = Column view
 show-hidden-files = Rejtett fájlok megjelenítése
 list-directories-first = Könyvtárak listázása először
 gallery-preview = Galéria előnézet
