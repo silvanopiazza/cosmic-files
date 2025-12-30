@@ -50,6 +50,7 @@ select-all = Изабери све
 view = Приказ
 grid-view = Прикажи мрежу
 list-view = Прикажи списак
+column-view = Column view
 menu-settings = Подешавања...
 cosmic-files = COSMIC Фајлови
 open-file = Отвори фајл

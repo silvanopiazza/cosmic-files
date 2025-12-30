@@ -173,6 +173,7 @@ zoom-out = Зменшити
 view = Вигляд
 grid-view = Перегляд таблицею
 list-view = Перегляд списком
+column-view = Column view
 show-hidden-files = Показати приховані файли
 list-directories-first = Теки спочатку
 menu-settings = Налаштування...

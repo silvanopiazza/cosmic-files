@@ -185,6 +185,7 @@ zoom-out = Diminuir
 view = Ver
 grid-view = Visualização em grelha
 list-view = Visualização em lista
+column-view = Column view
 show-hidden-files = Mostrar ficheiros ocultos
 list-directories-first = Listar primeiro os diretórios
 menu-settings = Definições...

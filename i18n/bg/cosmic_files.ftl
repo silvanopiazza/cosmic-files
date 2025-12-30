@@ -405,6 +405,7 @@ zoom-out = Намаляване
 view = Изглед
 grid-view = Изглед като решетка
 list-view = Изглед като списък
+column-view = Column view
 show-hidden-files = Показване на скритите файлове
 list-directories-first = Изброяване първо на папките
 gallery-preview = Изглед като галерия

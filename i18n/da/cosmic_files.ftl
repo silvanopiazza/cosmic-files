@@ -291,6 +291,7 @@ zoom-out = Zoom ud
 view = Visning
 grid-view = Gitter-visning
 list-view = Liste-visning
+column-view = Column view
 show-hidden-files = Vis skjulte filer
 list-directories-first = List mapper først
 gallery-preview = Galleri-forhåndsvisning

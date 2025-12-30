@@ -438,6 +438,7 @@ zoom-out = Oddialiť
 view = Zobraziť
 grid-view = Zobrazenie mriežky
 list-view = Zobrazenie zoznamu
+column-view = Column view
 show-hidden-files = Zobraziť skryté súbory
 list-directories-first = Najskôr priečinky
 gallery-preview = Náhľad galérie

@@ -299,6 +299,7 @@ zoom-out = Uzaklaştır
 view = Görünüm
 grid-view = Tablo görünümü
 list-view = Liste görünümü
+column-view = Column view
 show-hidden-files = Gizli dosyaları göster
 list-directories-first = Önce dizinleri listele
 gallery-preview = Galeri ön izlemesi

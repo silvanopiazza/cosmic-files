@@ -236,6 +236,7 @@ zoom-out = Уменьшить
 view = Вид
 grid-view = Сетка
 list-view = Список
+column-view = Column view
 show-hidden-files = Показывать скрытые файлы
 list-directories-first = Показывать сначала папки
 menu-settings = Параметры...

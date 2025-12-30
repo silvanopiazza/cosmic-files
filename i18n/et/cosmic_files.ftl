@@ -137,6 +137,7 @@ reload-folder = Laadi kaust uuesti
 rename = Muuda nime...
 grid-view = Ruudustikuvaade
 list-view = Loendivaade
+column-view = Column view
 show-hidden-files = Näita peidetud faile
 list-directories-first = Lisa kaustad loendi algusesse
 gallery-preview = Galerii eelvaade

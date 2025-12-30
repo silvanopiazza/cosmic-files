@@ -313,6 +313,7 @@ zoom-out = Zooma ut
 view = Visa
 grid-view = Rutnätsvy
 list-view = Listvy
+column-view = Column view
 show-hidden-files = Visa dolda filer
 list-directories-first = Lista mappar först
 gallery-preview = Galleri förhandsvisning

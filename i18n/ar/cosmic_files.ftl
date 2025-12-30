@@ -126,6 +126,7 @@ zoom-out = بعِّد
 view = عرض
 grid-view = عرض الشبكة
 list-view = عرض اللائحة
+column-view = Column view
 show-hidden-files = أظهر الملفات المخفية
 list-directories-first = اسرد المجلدات اولاً
 menu-settings = الإعدادات...

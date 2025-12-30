@@ -269,6 +269,7 @@ zoom-out = ज़ूम आउट करें
 view = दृश्य
 grid-view = ग्रिड दृश्य
 list-view = सूची दृश्य
+column-view = Column view
 show-hidden-files = छिपी हुई फाइलें दिखाएँ
 list-directories-first = सबसे पहले डाइरेक्ट्री दिखाएँ
 menu-settings = सेटिंग्स...

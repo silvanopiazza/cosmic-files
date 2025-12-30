@@ -50,6 +50,7 @@ select-all = Izaberi sve
 view = Prikaz
 grid-view = Prikaži mrežu
 list-view = Prikaži spisak
+column-view = Column view
 menu-settings = Podešavanja...
 repository = Repozitorijum
 support = Podrška

@@ -368,6 +368,7 @@ zoom-out = Súmáil amach
 view = Amharc
 grid-view = Amharc greille
 list-view = Amharc liosta
+column-view = Column view
 show-hidden-files = Taispeáin comhaid fholaithe
 list-directories-first = Liostaigh eolairí ar dtús
 gallery-preview = Réamhamharc gailearaí

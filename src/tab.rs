@@ -2486,6 +2486,7 @@ impl Item {
 pub enum View {
     Grid,
     List,
+    Column,
 }
 #[derive(Clone, Copy, Debug, Hash, PartialEq, PartialOrd, Ord, Eq, Deserialize, Serialize)]
 pub enum HeadingOptions {
@@ -4224,6 +4225,95 @@ impl Tab {
         }
     }
 
+    fn sort_items(&self, items: &mut [Item]) {
+        let check_reverse = |ord: Ordering, sort: bool| {
+            if sort { ord } else { ord.reverse() }
+        };
+        let (sort_name, sort_direction, folders_first) = self.sort_options();
+        match sort_name {
+            HeadingOptions::Size => {
+                items.sort_by(|a, b| {
+                    let get_size = |x: &Item| match &x.metadata {
+                        ItemMetadata::Path {
+                            metadata,
+                            children_opt,
+                        } => {
+                            if metadata.is_dir() {
+                                (true, children_opt.unwrap_or_default() as u64)
+                            } else {
+                                (false, metadata.len())
+                            }
+                        }
+                        ItemMetadata::Trash { metadata, .. } => match metadata.size {
+                            trash::TrashItemSize::Entries(entries) => (true, entries as u64),
+                            trash::TrashItemSize::Bytes(bytes) => (false, bytes),
+                        },
+                        ItemMetadata::SimpleDir { entries } => (true, *entries),
+                        ItemMetadata::SimpleFile { size } => (false, *size),
+                        #[cfg(feature = "gvfs")]
+                        ItemMetadata::GvfsPath {
+                            size_opt,
+                            children_opt,
+                            ..
+                        } => match children_opt {
+                            Some(child_count) => (true, *child_count as u64),
+                            None => (false, size_opt.unwrap_or_default()),
+                        },
+                    };
+                    let (a_is_entry, a_size) = get_size(a);
+                    let (b_is_entry, b_size) = get_size(b);
+
+                    match (a_is_entry, b_is_entry) {
+                        (true, false) => Ordering::Less,
+                        (false, true) => Ordering::Greater,
+                        _ => check_reverse(a_size.cmp(&b_size), sort_direction),
+                    }
+                });
+            }
+            HeadingOptions::Name => items.sort_by(|a, b| {
+                if folders_first {
+                    match (a.metadata.is_dir(), b.metadata.is_dir()) {
+                        (true, false) => Ordering::Less,
+                        (false, true) => Ordering::Greater,
+                        _ => check_reverse(
+                            LANGUAGE_SORTER.compare(&a.display_name, &b.display_name),
+                            sort_direction,
+                        ),
+                    }
+                } else {
+                    check_reverse(
+                        LANGUAGE_SORTER.compare(&a.display_name, &b.display_name),
+                        sort_direction,
+                    )
+                }
+            }),
+            HeadingOptions::Modified => items.sort_by(|a, b| {
+                let get_modified = |x: &Item| match &x.metadata {
+                    ItemMetadata::Path { metadata, .. } => metadata.modified().ok(),
+                    ItemMetadata::Trash { entry, .. } => {
+                        Some(std::time::UNIX_EPOCH + Duration::from_secs(entry.time_deleted))
+                    }
+                    #[cfg(feature = "gvfs")]
+                    ItemMetadata::GvfsPath { mtime_opt, .. } => *mtime_opt,
+                    _ => None,
+                };
+                let a_mod = get_modified(a);
+                let b_mod = get_modified(b);
+                check_reverse(a_mod.cmp(&b_mod), sort_direction)
+            }),
+            HeadingOptions::TrashedOn => items.sort_by(|a, b| {
+                let get_trash_time = |x: &Item| match &x.metadata {
+                    ItemMetadata::Trash { entry, .. } => entry.time_deleted,
+                    _ => 0,
+                };
+                check_reverse(
+                    get_trash_time(a).cmp(&get_trash_time(b)),
+                    sort_direction,
+                )
+            }),
+        }
+    }
+
     fn column_sort(&self) -> Option<Vec<(usize, &Item)>> {
         let check_reverse = |ord: Ordering, sort: bool| {
             if sort { ord } else { ord.reverse() }
@@ -4747,7 +4837,7 @@ impl Tab {
                 let mut column = widget::column::with_capacity(4).padding([0, space_s]);
                 column = column.push(row);
                 column = column.push(accent_rule);
-                if self.config.view == View::List && !condensed {
+                if matches!(self.config.view, View::List | View::Column) && !condensed {
                     column = column.push(heading_row);
                     column = column.push(heading_rule);
                 }
@@ -4889,7 +4979,7 @@ impl Tab {
         column = column.push(row);
         column = column.push(accent_rule);
 
-        if self.config.view == View::List && !condensed {
+        if matches!(self.config.view, View::List | View::Column) && !condensed {
             column = column.push(heading_row);
             column = column.push(heading_rule);
         }
@@ -5276,8 +5366,9 @@ impl Tab {
         (drag_list, mouse_area.into(), true)
     }
 
-    pub fn list_view(
+    fn list_view_with_width(
         &self,
+        available_width: Option<f32>,
     ) -> (
         Option<Element<'static, Message>>,
         Element<'_, Message>,
@@ -5294,6 +5385,11 @@ impl Tab {
         } = self.config;
 
         let size = self.size_opt.get().unwrap_or_else(|| Size::new(0.0, 0.0));
+        let size = if let Some(width) = available_width {
+            Size::new(width, size.height)
+        } else {
+            size
+        };
         //TODO: allow resizing?
         let name_width = 300.0;
         let modified_width = 200.0;
@@ -5658,6 +5754,129 @@ impl Tab {
         (drag_col, mouse_area.into(), true)
     }
 
+    pub fn list_view(
+        &self,
+    ) -> (
+        Option<Element<'static, Message>>,
+        Element<'_, Message>,
+        bool,
+    ) {
+        self.list_view_with_width(None)
+    }
+
+    pub fn column_view(
+        &self,
+    ) -> (
+        Option<Element<'static, Message>>,
+        Element<'_, Message>,
+        bool,
+    ) {
+        let cosmic_theme::Spacing {
+            space_xxs,
+            space_xs,
+            ..
+        } = theme::active().cosmic().spacing;
+
+        let Some(path) = self.location.path_opt() else {
+            return self.list_view();
+        };
+
+        let TabConfig {
+            show_hidden,
+            icon_sizes,
+            ..
+        } = self.config;
+
+        let column_width = 220.0;
+        let icon_size = icon_sizes.list_condensed();
+        let row_height = icon_size + 2 * space_xxs;
+
+        let mut path_chain: Vec<PathBuf> = path.ancestors().map(Path::to_path_buf).collect();
+        path_chain.reverse();
+
+        let size = self.size_opt.get().unwrap_or_else(|| Size::new(0.0, 0.0));
+        let max_columns = if size.width > 0.0 {
+            (size.width / column_width).floor().max(1.0) as usize
+        } else {
+            path_chain.len().max(1)
+        };
+        let visible_start = path_chain.len().saturating_sub(max_columns);
+        let visible_chain = &path_chain[visible_start..];
+
+        let last_index = visible_chain.len().saturating_sub(1);
+        let mut columns = Vec::with_capacity(visible_chain.len());
+
+        for (index, ancestor_path) in visible_chain.iter().enumerate().take(last_index) {
+            let mut items = scan_path(ancestor_path, icon_sizes);
+            items.retain(|item| !item.hidden || show_hidden);
+            self.sort_items(&mut items);
+
+            let selected_path = visible_chain.get(index + 1);
+            let mut column = widget::column::with_capacity(items.len()).spacing(space_xxs);
+            for item in items {
+                let location = item.location_opt.clone();
+                let selected = selected_path.is_some_and(|path| {
+                    item.path_opt().is_some_and(|item_path| item_path == path)
+                });
+
+                let row = widget::row::with_children([
+                    widget::icon::icon(item.icon_handle_list_condensed.clone())
+                        .content_fit(ContentFit::Contain)
+                        .size(icon_size)
+                        .into(),
+                    widget::text::body(item.display_name.clone())
+                        .width(Length::Fill)
+                        .into(),
+                ])
+                .height(Length::Fixed(f32::from(row_height)))
+                .align_y(Alignment::Center)
+                .spacing(space_xxs);
+
+                let mut button = widget::button::custom(row)
+                    .width(Length::Fill)
+                    .padding([0, space_xxs])
+                    .class(button_style(
+                        selected,
+                        false,
+                        false,
+                        true,
+                        true,
+                        matches!(self.mode, Mode::Desktop),
+                    ));
+
+                if let Some(location) = location {
+                    button = button.on_press(Message::Location(location));
+                }
+
+                column = column.push(button);
+            }
+
+            let column = widget::scrollable(column)
+                .height(Length::Fill)
+                .width(Length::Fixed(column_width));
+            columns.push(column.into());
+        }
+
+        let last_width = if size.width > 0.0 {
+            (size.width - column_width * (last_index as f32)).max(column_width)
+        } else {
+            column_width
+        };
+        let (drag_list, list_view, can_scroll) =
+            self.list_view_with_width(Some(last_width));
+        columns.push(
+            widget::container(list_view)
+                .width(Length::Fixed(last_width))
+                .into(),
+        );
+
+        let columns = widget::row::with_children(columns)
+            .spacing(space_xs)
+            .width(Length::Fill);
+
+        (drag_list, columns.into(), can_scroll)
+    }
+
     pub fn view_responsive<'a>(
         &'a self,
         key_binds: &'a HashMap<KeyBind, Action>,
@@ -5682,6 +5901,7 @@ impl Tab {
         let (drag_list, mut item_view, can_scroll) = match self.config.view {
             View::Grid => self.grid_view(),
             View::List => self.list_view(),
+            View::Column => self.column_view(),
         };
         item_view = widget::container(item_view).width(Length::Fill).into();
         let files = self
@@ -5722,7 +5942,7 @@ impl Tab {
                                     f32::from(space_xxs).mul_add(-3.0, -f32::from(space_xxxs)),
                                     -4. * f32::from(space_xxxs),
                                 ),
-                                View::List => Vector::ZERO,
+                                View::List | View::Column => Vector::ZERO,
                             },
                         )
                     })
